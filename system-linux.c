@@ -2954,6 +2954,14 @@ static int system_iprule(struct iprule *rule, int cmd)
 	if (rule->flags & IPRULE_SUP_PREFIXLEN)
 		nla_put_u32(msg, FRA_SUPPRESS_PREFIXLEN, rule->sup_prefixlen);
 
+	if (rule->flags & IPRULE_UIDRANGE) {
+		struct fib_rule_uid_range uidrange = {
+			rule->uidrange_start,
+			rule->uidrange_end
+		};
+		nla_put(msg, FRA_UID_RANGE, sizeof(uidrange), &uidrange);
+	}
+
 	if (rule->flags & IPRULE_GOTO)
 		nla_put_u32(msg, FRA_GOTO, rule->gotoid);
 
